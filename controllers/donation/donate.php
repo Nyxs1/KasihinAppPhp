@@ -1,8 +1,8 @@
 <?php
-require_once '../../config/database.php';
-require_once '../../core/response.php';
-require_once '../../models/DonationModel.php';
-require_once '../../helpers/sanitizer.php';
+require_once __DIR__ . '../../config/database.php';
+require_once __DIR__ . '../../core/response.php';
+require_once __DIR__ . '../../models/DonationModel.php';
+require_once __DIR__ . '../../helpers/sanitizer.php';
 
 $dari_user_id = (int) ($_POST['dari_user_id'] ?? 0);
 $ke_campaign_id = (int) ($_POST['ke_campaign_id'] ?? 0);

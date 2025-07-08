@@ -1,8 +1,8 @@
 <?php
-require_once '../../config/database.php';
-require_once '../../core/response.php';
-require_once '../../models/QuestModel.php';
-require_once '../../helpers/sanitizer.php';
+require_once __DIR__ . '../../config/database.php';
+require_once __DIR__ . '../../core/response.php';
+require_once __DIR__ . '../../models/QuestModel.php';
+require_once __DIR__ . '../../helpers/sanitizer.php';
 
 $user_id = (int) ($_POST['user_id'] ?? 0);
 $quest_id = (int) ($_POST['quest_id'] ?? 0);

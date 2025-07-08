@@ -1,8 +1,9 @@
 <?php
-require_once '../../config/database.php';
-require_once '../../core/response.php';
-require_once '../../models/UserModel.php';
-require_once '../../helpers/sanitizer.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../core/response.php';
+require_once __DIR__ . '/../../models/UserModel.php';
+require_once __DIR__ . '/../../helpers/sanitizer.php';
+
 
 $email = sanitize($_POST['email'] ?? '');
 $password = sanitize($_POST['password'] ?? '');
