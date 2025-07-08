@@ -1,26 +1,33 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
 
-function findUserByEmailAndPassword($email, $password) {
+function findUserByEmail($email) {
     global $conn;
-    $email = mysqli_real_escape_string($conn, $email);
-    $password = mysqli_real_escape_string($conn, $password);
-    $query = mysqli_query($conn, "SELECT * FROM users WHERE email='$email' AND password='$password'");
-    return mysqli_fetch_assoc($query);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
 }
 
-function createUser($nama, $email, $password, $role = 'person') {
+function findUserByEmailAndPassword($email, $password) {
     global $conn;
-    $nama = mysqli_real_escape_string($conn, $nama);
-    $email = mysqli_real_escape_string($conn, $email);
-    $password = mysqli_real_escape_string($conn, $password);
-    $role = mysqli_real_escape_string($conn, $role);
-    return mysqli_query($conn, "INSERT INTO users (nama, email, password, role) VALUES ('$nama', '$email', '$password', '$role')");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND password = ?");
+    $stmt->bind_param("ss", $email, $password);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+
+function createUser($nama, $email, $password, $role, $poin) {
+    global $conn;
+    $stmt = $conn->prepare("INSERT INTO users (nama, email, password, role, poin, createdAt) VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmt->bind_param("ssssi", $nama, $email, $password, $role, $poin);
+    return $stmt->execute();
 }
 
 function getUserById($id) {
     global $conn;
-    $id = (int) $id;
-    $query = mysqli_query($conn, "SELECT * FROM users WHERE id=$id");
-    return mysqli_fetch_assoc($query);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
 }
