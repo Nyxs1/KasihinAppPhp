@@ -31,3 +31,10 @@ function getUserById($id) {
     $stmt->execute();
     return $stmt->get_result()->fetch_assoc();
 }
+
+function updateUserProfile($id, $nama, $email, $password) {
+    global $conn;
+    $stmt = $conn->prepare("UPDATE users SET nama = ?, email = ?, password = ? WHERE id = ?");
+    $stmt->bind_param("sssi", $nama, $email, $password, $id);
+    return $stmt->execute();
+}

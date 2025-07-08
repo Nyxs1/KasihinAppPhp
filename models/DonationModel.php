@@ -3,22 +3,27 @@ require_once __DIR__ . '/../config/database.php';
 
 function donateToCampaign($dari_user_id, $ke_campaign_id, $jumlah) {
     global $conn;
-    $dari_user_id = (int) $dari_user_id;
-    $ke_campaign_id = (int) $ke_campaign_id;
-    $jumlah = (int) $jumlah;
-    return mysqli_query($conn,
-        "INSERT INTO donations (dari_user_id, ke_campaign_id, jumlah)
-         VALUES ($dari_user_id, $ke_campaign_id, $jumlah)"
-    );
+    $stmt = $conn->prepare("INSERT INTO donations (dari_user_id, ke_campaign_id, jumlah, tanggal)
+                            VALUES (?, ?, ?, NOW())");
+    $stmt->bind_param("iii", $dari_user_id, $ke_campaign_id, $jumlah);
+    return $stmt->execute();
 }
 
 function getDonationsByUser($user_id) {
     global $conn;
-    $user_id = (int) $user_id;
-    $result = mysqli_query($conn, "SELECT * FROM donations WHERE dari_user_id=$user_id ORDER BY tanggal DESC");
+    $stmt = $conn->prepare("SELECT d.id, d.ke_campaign_id, c.nama_campaign, d.jumlah, d.tanggal
+                            FROM donations d
+                            JOIN campaigns c ON d.ke_campaign_id = c.id
+                            WHERE d.dari_user_id = ?
+                            ORDER BY d.tanggal DESC");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
     $data = [];
-    while ($row = mysqli_fetch_assoc($result)) {
+    while ($row = $result->fetch_assoc()) {
         $data[] = $row;
     }
+
     return $data;
 }
